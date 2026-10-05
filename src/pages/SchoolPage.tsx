@@ -10,7 +10,6 @@ import {
   VolumeX, 
   Sun, 
   Moon, 
-  MapPin, 
   CheckCircle2, 
   Eye
 } from 'lucide-react';
@@ -168,59 +167,58 @@ export const SchoolPage: React.FC<SchoolPageProps> = ({ onOpenTrial }) => {
   return (
     <div className="space-y-28 sm:space-y-40 pt-6 pb-28">
       
-      {/* 1. Header with Monumental Watermark Typography */}
-      <section className="relative min-h-[48vh] flex items-center justify-center overflow-hidden px-4 sm:px-6 lg:px-8 text-center">
+      {/* 1. Header with Colossal Typography & Watermark */}
+      <section className="relative min-h-[45vh] flex items-center justify-center overflow-hidden px-4 sm:px-6 lg:px-8 text-center">
         <div 
           className="absolute inset-0 flex items-center justify-center pointer-events-none select-none overflow-hidden -z-10"
           aria-hidden="true"
         >
           <span 
-            className="text-[14vw] font-sans font-extrabold uppercase tracking-tighter text-white/[0.02] leading-none"
+            className="text-[15vw] font-sans font-extrabold uppercase tracking-tighter text-white/[0.025] leading-none"
             style={{ transform: 'translateY(-10%)' }}
           >
-            EL ESTUDIO
+            LA ESCUELA
           </span>
         </div>
 
         <div className="max-w-4xl mx-auto space-y-5">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/[0.04] border border-white/10 text-[11px] font-mono uppercase tracking-[0.25em] text-white/50">
-            <MapPin className="w-3.5 h-3.5 text-white/80" />
-            <span>Carrer Oliver, 24 · Alcoy</span>
-          </div>
+          <span className="text-[11px] font-mono uppercase tracking-[0.25em] text-white/40 block">
+            NUESTRO ESPACIO
+          </span>
 
           <h1 className="text-4xl sm:text-6xl lg:text-7xl font-sans font-extralight tracking-tight text-white">
-            Nuestra Escuela & <span className="font-normal text-white">Espacios Técnicos</span>
+            Nuestra Escuela & <span className="font-normal text-white">Espacios</span>
           </h1>
 
           <p className="text-xs sm:text-sm text-white/50 max-w-2xl mx-auto leading-relaxed font-light">
             Más de 15 años siendo el hogar del movimiento en Alcoy. Instalaciones profesionales climatizadas y concebidas para la salud articular y la libertad artística de cada alumno.
           </p>
-
-          <div className="flex flex-wrap items-center justify-center gap-3 pt-3">
-            <button
-              onClick={() => {
-                const el = document.getElementById('tour-virtual');
-                el?.scrollIntoView({ behavior: 'smooth' });
-              }}
-              className="btn-pill-white text-xs py-2.5 px-6 gap-2"
-            >
-              <span>Explorar Tour de Salas</span>
-              <ArrowUpRight className="w-3.5 h-3.5" />
-            </button>
-            <button
-              onClick={() => setVideoModalOpen(true)}
-              className="btn-ghost-minimal text-xs py-2.5 px-5 gap-2 border border-white/15 hover:border-white/30"
-            >
-              <Play className="w-3.5 h-3.5 fill-white" />
-              <span>Ver vídeo del estudio</span>
-            </button>
-          </div>
         </div>
       </section>
 
-      {/* 2. Key Facilities Stats Cards */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 -mt-16 sm:-mt-20">
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4">
+      {/* 2. Interactive Action Bar & Key Facilities Stats */}
+      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 -mt-8 sm:-mt-12 space-y-6">
+        <div className="flex flex-wrap items-center justify-center gap-3">
+          <button
+            onClick={() => {
+              const el = document.getElementById('tour-virtual');
+              el?.scrollIntoView({ behavior: 'smooth' });
+            }}
+            className="btn-pill-white text-xs py-2.5 px-6 gap-2 cursor-pointer"
+          >
+            <span>Explorar Tour de Salas</span>
+            <ArrowUpRight className="w-3.5 h-3.5" />
+          </button>
+          <button
+            onClick={() => setVideoModalOpen(true)}
+            className="btn-ghost-minimal text-xs py-2.5 px-5 gap-2 border border-white/15 hover:border-white/30 cursor-pointer"
+          >
+            <Play className="w-3.5 h-3.5 fill-white" />
+            <span>Ver vídeo del estudio</span>
+          </button>
+        </div>
+
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4 pt-2">
           {[
             { label: 'Superficie técnica', value: '+300 m²', note: '3 salas independientes' },
             { label: 'Tarima flotante', value: 'Harlequin', note: 'Absorbe 68% impacto' },
