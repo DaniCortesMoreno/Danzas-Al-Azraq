@@ -1,0 +1,276 @@
+@import "tailwindcss";
+
+@theme {
+  --font-sans: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'SF Pro Display', sans-serif;
+  --font-display: 'Inter', system-ui, -apple-system, sans-serif;
+  --font-serif: 'Playfair Display', Georgia, serif;
+  --font-mono: 'JetBrains Mono', Menlo, monospace;
+
+  --color-noir-pure: #000000;
+  --color-noir-surface: #070709;
+  --color-noir-card: rgba(12, 12, 16, 0.55);
+  --color-noir-border: rgba(255, 255, 255, 0.08);
+
+  /* Single subtle celestial accent (Pure Ice Light) */
+  --color-accent-subtle: #FFFFFF;
+  --color-accent-ethereal: rgba(255, 255, 255, 0.15);
+}
+
+/* Base Canvas: Extreme Minimalist Pure Black */
+html, body {
+  background-color: #000000;
+  color: #FFFFFF;
+  overflow-x: hidden;
+  font-family: var(--font-sans);
+  letter-spacing: -0.02em;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* 3D Perspective & Physics Space */
+.antigravity-space {
+  perspective: 1400px;
+  transform-style: preserve-3d;
+}
+
+.preserve-3d {
+  transform-style: preserve-3d;
+}
+
+/* Antigravity Glass Cards with Fluid Weightlessness */
+.antigravity-card {
+  background: rgba(10, 10, 14, 0.55);
+  backdrop-filter: blur(36px);
+  -webkit-backdrop-filter: blur(36px);
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  box-shadow: 0 30px 80px -20px rgba(0, 0, 0, 0.9);
+  transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1), 
+              border-color 0.5s ease, 
+              box-shadow 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: transform, border-color, box-shadow;
+}
+
+.antigravity-card:hover {
+  border-color: rgba(255, 255, 255, 0.24);
+  box-shadow: 0 40px 120px -25px rgba(0, 0, 0, 1), 
+              0 0 60px -15px rgba(255, 255, 255, 0.06);
+}
+
+/* Hyper-minimalist Floating Pill (Precision Swiss / Apple Aesthetic) */
+.glass-capsule {
+  background: rgba(10, 10, 14, 0.5);
+  backdrop-filter: blur(30px);
+  -webkit-backdrop-filter: blur(30px);
+  border: 1px solid rgba(255, 255, 255, 0.09);
+  box-shadow: 0 20px 50px -10px rgba(0, 0, 0, 0.7);
+  transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.glass-capsule:hover {
+  border-color: rgba(255, 255, 255, 0.18);
+  box-shadow: 0 25px 60px -10px rgba(0, 0, 0, 0.8), 0 0 30px rgba(255, 255, 255, 0.03);
+}
+
+/* Legacy Card alias mapped to pure Antigravity card */
+.glass-card-3d {
+  background: rgba(8, 8, 12, 0.6);
+  backdrop-filter: blur(36px);
+  -webkit-backdrop-filter: blur(36px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 0 30px 80px -20px rgba(0, 0, 0, 0.9);
+  transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1), 
+              border-color 0.5s ease, 
+              box-shadow 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: transform, border-color, box-shadow;
+}
+
+.glass-card-3d:hover {
+  border-color: rgba(255, 255, 255, 0.22);
+  box-shadow: 0 45px 120px -25px rgba(0, 0, 0, 1), 
+              0 0 50px -15px rgba(255, 255, 255, 0.06);
+}
+
+/* Extreme Minimalist Primary Button */
+.btn-pill-white {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 9999px;
+  background-color: #FFFFFF;
+  color: #000000;
+  font-weight: 600;
+  padding: 0.875rem 2.25rem;
+  font-size: 0.875rem;
+  letter-spacing: -0.01em;
+  box-shadow: 0 10px 40px -10px rgba(255, 255, 255, 0.25), 0 20px 40px rgba(0, 0, 0, 0.5);
+  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  cursor: pointer;
+  user-select: none;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.btn-pill-white:hover {
+  transform: translateY(-3px) scale(1.01);
+  background-color: #F4F4F6;
+  box-shadow: 0 20px 50px -10px rgba(255, 255, 255, 0.35), 0 30px 60px rgba(0, 0, 0, 0.6);
+}
+
+.btn-pill-white:active {
+  transform: translateY(0px) scale(0.99);
+}
+
+/* Ethereal Ghost Minimal Button */
+.btn-ghost-minimal {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: rgba(255, 255, 255, 0.7);
+  font-weight: 500;
+  font-size: 0.875rem;
+  padding: 0.875rem 1.75rem;
+  border-radius: 9999px;
+  background: transparent;
+  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  border: 1px solid transparent;
+}
+
+.btn-ghost-minimal:hover {
+  color: #FFFFFF;
+  border-color: rgba(255, 255, 255, 0.15);
+  background: rgba(255, 255, 255, 0.03);
+  transform: translateY(-1px);
+}
+
+/* Fluid Physics & Antigravity Floating Keyframes */
+@keyframes zeroGravityFloat {
+  0%, 100% {
+    transform: translateY(0px) rotate(0deg);
+  }
+  33% {
+    transform: translateY(-8px) rotate(0.4deg);
+  }
+  66% {
+    transform: translateY(-14px) rotate(-0.3deg);
+  }
+}
+
+@keyframes etherealPulse {
+  0%, 100% {
+    opacity: 0.12;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.25;
+    transform: scale(1.04);
+  }
+}
+
+@keyframes kineticTicker {
+  0% { transform: translateX(0%); }
+  100% { transform: translateX(-50%); }
+}
+
+@keyframes kineticTickerReverse {
+  0% { transform: translateX(-50%); }
+  100% { transform: translateX(0%); }
+}
+
+.animate-zero-g {
+  animation: zeroGravityFloat 9s cubic-bezier(0.45, 0, 0.55, 1) infinite;
+}
+
+.animate-ethereal-pulse {
+  animation: etherealPulse 8s ease-in-out infinite;
+}
+
+.animate-kinetic-ticker {
+  display: flex;
+  width: max-content;
+  animation: kineticTicker 40s linear infinite;
+}
+.animate-kinetic-ticker:hover {
+  animation-play-state: paused;
+}
+
+.animate-kinetic-ticker-reverse {
+  display: flex;
+  width: max-content;
+  animation: kineticTickerReverse 45s linear infinite;
+}
+.animate-kinetic-ticker-reverse:hover {
+  animation-play-state: paused;
+}
+
+@keyframes equalizerPulse {
+  0%, 100% { height: 18%; }
+  50% { height: 95%; }
+}
+
+.animate-equalizer-1 { animation: equalizerPulse 1.4s ease-in-out infinite; }
+.animate-equalizer-2 { animation: equalizerPulse 1.0s ease-in-out infinite 0.2s; }
+.animate-equalizer-3 { animation: equalizerPulse 1.6s ease-in-out infinite 0.4s; }
+.animate-equalizer-4 { animation: equalizerPulse 0.9s ease-in-out infinite 0.1s; }
+.animate-equalizer-5 { animation: equalizerPulse 1.3s ease-in-out infinite 0.3s; }
+
+@keyframes hologramScan {
+  0% { transform: translateY(-100%); opacity: 0; }
+  50% { opacity: 0.4; }
+  100% { transform: translateY(200%); opacity: 0; }
+}
+
+.animate-hologram {
+  animation: hologramScan 4s cubic-bezier(0.16, 1, 0.3, 1) infinite;
+}
+
+/* Ultra-refined minimal scrollbar */
+::-webkit-scrollbar {
+  width: 5px;
+}
+::-webkit-scrollbar-track {
+  background: #000000;
+}
+::-webkit-scrollbar-thumb {
+  background: #17171C;
+  border-radius: 9999px;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.3);
+}
+
+/* Draggable carousel & horizontal scrollers */
+.hide-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+.hide-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+/* Masked fading edges for carousels */
+.mask-edges-horizontal {
+  mask-image: linear-gradient(to right, transparent, black 4%, black 96%, transparent);
+  -webkit-mask-image: linear-gradient(to right, transparent, black 4%, black 96%, transparent);
+}
+
+/* Hairline dividers & editorial minimalist borders */
+.hairline-border {
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+.hairline-top {
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+.hairline-bottom {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+.hairline-left {
+  border-left: 1px solid rgba(255, 255, 255, 0.08);
+}
+.hairline-right {
+  border-right: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+/* Masonry column support */
+.masonry-break {
+  break-inside: avoid;
+}
