@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { createPortal } from 'react-dom';
 import { Link } from 'react-router-dom';
 import { 
   Quote, 
@@ -8,8 +9,6 @@ import {
   Sparkles, 
   Volume2, 
   VolumeX, 
-  Sun, 
-  Moon, 
   CheckCircle2, 
   Eye
 } from 'lucide-react';
@@ -25,9 +24,20 @@ export const SchoolPage: React.FC<SchoolPageProps> = ({ onOpenTrial }) => {
   const [activeStudioIndex, setActiveStudioIndex] = useState(0);
   const [selectedFacultyId, setSelectedFacultyId] = useState<string>(FACULTY[0].id);
   const [activeHotspot, setActiveHotspot] = useState<number | null>(null);
-  const [lightingMode, setLightingMode] = useState<'day' | 'stage'>('day');
   const [videoModalOpen, setVideoModalOpen] = useState(false);
   const [videoMuted, setVideoMuted] = useState(true);
+
+  // Prevent background scroll when video modal is open
+  useEffect(() => {
+    if (videoModalOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
+    }
+    return () => {
+      document.body.style.overflow = '';
+    };
+  }, [videoModalOpen]);
 
   const studios = [
     {
@@ -36,8 +46,7 @@ export const SchoolPage: React.FC<SchoolPageProps> = ({ onOpenTrial }) => {
       tag: '120 m² · Tarima Amortiguada Flotante',
       capacity: 'Aforo: 25 bailarines',
       desc: 'El espacio principal de la academia. Equipado con suelo técnico Harlequin sobre tacos de neopreno elastómero que absorben el 68% del impacto articular en saltos. 16 metros continuos de espejos ópticos y acústica envolvente.',
-      imageDay: '/images/danza_studio_alcoy_1790849077427.jpg',
-      imageStage: '/images/hero_dance_studio_1790848944277.jpg',
+      image: '/images/danza_studio_alcoy_1790849077427.jpg',
       specs: [
         'Tarima de amortiguación biomecánica Harlequin',
         '16 metros de espejos sin aberración óptica',
@@ -71,8 +80,7 @@ export const SchoolPage: React.FC<SchoolPageProps> = ({ onOpenTrial }) => {
       tag: '85 m² · 14 Telas Aéreas Certificadas',
       capacity: 'Aforo: 14 personas (Grupos reducidos)',
       desc: 'Espacio diáfano y sereno con anclajes estructurales de acero reforzado certificados para columpios y telas de seda. Diseñado para descompresión lumbar, ingravidez y tonificación postural profunda en grupos reducidos.',
-      imageDay: '/images/pilates_wellness_1790849017867.jpg',
-      imageStage: '/images/pilates-wellness.jpg',
+      image: '/images/pilates_wellness_1790849017867.jpg',
       specs: [
         'Anclajes estructurales de techo certificados para 800 kg/punto',
         'Telas de seda técnica de suspensión ergonómica',
@@ -106,8 +114,7 @@ export const SchoolPage: React.FC<SchoolPageProps> = ({ onOpenTrial }) => {
       tag: '65 m² · Acústica Aislada & Madera Noble',
       capacity: 'Aforo: 18 bailarines',
       desc: 'Dedicado a la Danza Oriental, Flamenco Fusión, Sevillanas y Bailes Latinos. Aislamiento acústico de doble cámara para música en directo, percusión árabe y percusión de taconeo con máxima fidelidad.',
-      imageDay: '/images/fusion_flamenco_oriental_1790848979877.jpg',
-      imageStage: '/images/fusion-flamenco.jpg',
+      image: '/images/fusion_flamenco_oriental_1790848979877.jpg',
       specs: [
         'Tarima de roble con resonancia noble para taconeo',
         'Aislamiento acústico integral de doble cámara',
@@ -135,8 +142,7 @@ export const SchoolPage: React.FC<SchoolPageProps> = ({ onOpenTrial }) => {
       tag: '50 m² · Acogida & Convivencia',
       capacity: 'Punto de encuentro para alumnos y acompañantes',
       desc: 'Un espacio cálido en el centro de Alcoy donde tomar un té de bienvenida, consultar nuestra biblioteca especializada en artes escénicas o esperar confortablemente a que tus hijos terminen su clase.',
-      imageDay: '/images/studio-alcoy.jpg',
-      imageStage: '/images/studio-alcoy.jpg',
+      image: '/images/studio-alcoy.jpg',
       specs: [
         'Cafetería e infusiones de cortesía para alumnos',
         'Zona de consulta y biblioteca de danza y anatomía',
@@ -161,7 +167,6 @@ export const SchoolPage: React.FC<SchoolPageProps> = ({ onOpenTrial }) => {
   ];
 
   const currentStudio = studios[activeStudioIndex];
-  const currentImage = lightingMode === 'day' ? currentStudio.imageDay : currentStudio.imageStage;
   const activeFaculty = FACULTY.find(f => f.id === selectedFacultyId) || FACULTY[0];
 
   return (
@@ -237,48 +242,20 @@ export const SchoolPage: React.FC<SchoolPageProps> = ({ onOpenTrial }) => {
       </section>
 
       {/* ============================================================== */}
-      {/* 3. TOUR VIRTUAL INTERACTIVO CON HOTSPOTS & MODO ILUMINACIÓN */}
+      {/* 3. TOUR VIRTUAL INTERACTIVO CON HOTSPOTS */}
       {/* ============================================================== */}
       <section id="tour-virtual" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
         
-        <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 border-b border-white/[0.08] pb-6">
-          <div className="space-y-2">
-            <span className="text-[11px] font-mono uppercase tracking-[0.25em] text-white/40 block">
-              TOUR VIRTUAL DE INSTALACIONES
-            </span>
-            <h2 className="text-3xl sm:text-5xl font-sans font-extralight text-white">
-              Explora Nuestras Salas al Detalle
-            </h2>
-            <p className="text-xs sm:text-sm text-white/50 font-light max-w-xl">
-              Haz clic en los puntos interactivos para descubrir las ventajas biomecánicas y tecnológicas de cada espacio.
-            </p>
-          </div>
-
-          {/* Lighting Mode Toggle */}
-          <div className="flex items-center gap-2 p-1 rounded-full bg-white/[0.03] border border-white/10 shrink-0">
-            <button
-              onClick={() => setLightingMode('day')}
-              className={`flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs font-medium transition-all ${
-                lightingMode === 'day' 
-                  ? 'bg-white text-black font-semibold shadow-sm' 
-                  : 'text-white/50 hover:text-white'
-              }`}
-            >
-              <Sun className="w-3.5 h-3.5" />
-              <span>Luz Natural</span>
-            </button>
-            <button
-              onClick={() => setLightingMode('stage')}
-              className={`flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs font-medium transition-all ${
-                lightingMode === 'stage' 
-                  ? 'bg-white text-black font-semibold shadow-sm' 
-                  : 'text-white/50 hover:text-white'
-              }`}
-            >
-              <Moon className="w-3.5 h-3.5" />
-              <span>Modo Escénico</span>
-            </button>
-          </div>
+        <div className="border-b border-white/[0.08] pb-6 space-y-2">
+          <span className="text-[11px] font-mono uppercase tracking-[0.25em] text-white/40 block">
+            TOUR VIRTUAL DE INSTALACIONES
+          </span>
+          <h2 className="text-3xl sm:text-5xl font-sans font-extralight text-white">
+            Explora Nuestras Salas al Detalle
+          </h2>
+          <p className="text-xs sm:text-sm text-white/50 font-light max-w-xl">
+            Haz clic en los puntos interactivos para descubrir las ventajas biomecánicas y tecnológicas de cada espacio.
+          </p>
         </div>
 
         {/* Studio Switcher Tabs */}
@@ -310,7 +287,7 @@ export const SchoolPage: React.FC<SchoolPageProps> = ({ onOpenTrial }) => {
             <div className="lg:col-span-8 space-y-4">
               <div className="relative rounded-2xl sm:rounded-3xl overflow-hidden border border-white/10 shadow-2xl h-80 sm:h-[460px] lg:h-[500px] bg-black group select-none">
                 <img
-                  src={currentImage}
+                  src={currentStudio.image}
                   alt={currentStudio.name}
                   className="w-full h-full object-cover transition-all duration-700 group-hover:scale-[1.02]"
                 />
@@ -345,7 +322,6 @@ export const SchoolPage: React.FC<SchoolPageProps> = ({ onOpenTrial }) => {
                         }`}
                         aria-label={`Ver detalle: ${spot.title}`}
                       >
-                        {/* Pulsing ring */}
                         <span className="absolute -inset-1 rounded-full bg-white opacity-40 animate-ping" />
                         <Sparkles className="w-3.5 h-3.5" />
                       </button>
@@ -434,7 +410,7 @@ export const SchoolPage: React.FC<SchoolPageProps> = ({ onOpenTrial }) => {
               <div className="pt-2">
                 <button
                   onClick={() => onOpenTrial()}
-                  className="btn-pill-white w-full py-3 text-xs uppercase tracking-wider font-semibold flex items-center justify-center gap-2"
+                  className="btn-pill-white w-full py-3 text-xs uppercase tracking-wider font-semibold flex items-center justify-center gap-2 cursor-pointer"
                 >
                   <span>Ven a conocer esta sala en persona</span>
                   <ArrowUpRight className="w-3.5 h-3.5" />
@@ -730,86 +706,92 @@ export const SchoolPage: React.FC<SchoolPageProps> = ({ onOpenTrial }) => {
         </div>
       </section>
 
-      {/* Video Reel Modal */}
-      <AnimatePresence>
-        {videoModalOpen && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            onClick={() => setVideoModalOpen(false)}
-            className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/90 backdrop-blur-2xl"
-          >
+      {/* Video Reel Modal rendered directly on document.body using Portal */}
+      {createPortal(
+        <AnimatePresence>
+          {videoModalOpen && (
             <motion.div
-              initial={{ scale: 0.95, y: 15 }}
-              animate={{ scale: 1, y: 0 }}
-              exit={{ scale: 0.95, y: 10 }}
-              onClick={(e) => e.stopPropagation()}
-              className="relative w-full max-w-4xl rounded-3xl overflow-hidden bg-black border border-white/15 shadow-2xl p-2 sm:p-4 text-white"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.25 }}
+              onClick={() => setVideoModalOpen(false)}
+              data-lenis-prevent
+              className="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-black/90 backdrop-blur-2xl"
             >
-              <div className="flex items-center justify-between pb-3 px-2 border-b border-white/10">
-                <span className="text-xs font-mono uppercase tracking-wider text-white/60">
-                  Un Día en Danzas Al-Azraq · Estudio Alcoy
-                </span>
-                <button
-                  onClick={() => setVideoModalOpen(false)}
-                  className="p-1.5 rounded-full bg-white/10 hover:bg-white/20 text-white transition-all cursor-pointer"
-                  aria-label="Cerrar vídeo"
-                >
-                  <X className="w-4 h-4" />
-                </button>
-              </div>
-
-              {/* Video Player Display */}
-              <div className="relative aspect-video rounded-2xl overflow-hidden mt-3 bg-neutral-900 border border-white/10 flex items-center justify-center">
-                <img
-                  src="/images/hero_dance_studio_1790848944277.jpg"
-                  alt="Vista del estudio"
-                  className="w-full h-full object-cover opacity-80"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-black via-black/30 to-transparent" />
-                
-                <div className="absolute inset-0 flex flex-col items-center justify-center text-center p-6 space-y-4">
-                  <div className="p-5 rounded-full bg-white text-black shadow-[0_0_40px_rgba(255,255,255,0.6)] animate-pulse">
-                    <Play className="w-8 h-8 fill-black" />
-                  </div>
-                  <div className="space-y-1">
-                    <h4 className="text-xl sm:text-2xl font-sans font-light text-white">
-                      Atmósfera, Luz & Movimiento
-                    </h4>
-                    <p className="text-xs text-white/60 max-w-md font-light">
-                      El espacio diáfano donde los alumnos encuentran su ritmo y perfeccionan su técnica cada semana.
-                    </p>
-                  </div>
-                </div>
-
-                <div className="absolute bottom-4 right-4 flex items-center gap-2">
+              <motion.div
+                initial={{ scale: 0.94, y: 15 }}
+                animate={{ scale: 1, y: 0 }}
+                exit={{ scale: 0.94, y: 10 }}
+                transition={{ type: 'spring', damping: 28, stiffness: 320 }}
+                onClick={(e) => e.stopPropagation()}
+                className="relative w-full max-w-4xl rounded-3xl overflow-hidden bg-[#0a0a0c] border border-white/15 shadow-[0_35px_100px_rgba(0,0,0,0.95)] p-3 sm:p-5 text-white"
+              >
+                <div className="flex items-center justify-between pb-3 px-2 border-b border-white/10">
+                  <span className="text-xs font-mono uppercase tracking-wider text-white/60">
+                    Un Día en Danzas Al-Azraq · Estudio Alcoy
+                  </span>
                   <button
-                    onClick={() => setVideoMuted(!videoMuted)}
-                    className="p-2 rounded-full bg-black/60 backdrop-blur-md border border-white/20 text-white/70 hover:text-white"
-                    aria-label="Silenciar sonido"
+                    onClick={() => setVideoModalOpen(false)}
+                    className="p-1.5 rounded-full bg-white/10 hover:bg-white/20 text-white transition-all cursor-pointer"
+                    aria-label="Cerrar vídeo"
                   >
-                    {videoMuted ? <VolumeX className="w-4 h-4" /> : <Volume2 className="w-4 h-4" />}
+                    <X className="w-4 h-4" />
                   </button>
                 </div>
-              </div>
 
-              <div className="p-4 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-white/50">
-                <span>📍 Carrer Oliver, 24 · Alcoy</span>
-                <button
-                  onClick={() => {
-                    setVideoModalOpen(false);
-                    onOpenTrial();
-                  }}
-                  className="btn-pill-white py-2 px-5 text-xs uppercase"
-                >
-                  Reservar clase de prueba
-                </button>
-              </div>
+                {/* Video Player Display */}
+                <div className="relative aspect-video rounded-2xl overflow-hidden mt-3 bg-neutral-900 border border-white/10 flex items-center justify-center">
+                  <img
+                    src="/images/hero_dance_studio_1790848944277.jpg"
+                    alt="Vista del estudio"
+                    className="w-full h-full object-cover opacity-80"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black via-black/30 to-transparent" />
+                  
+                  <div className="absolute inset-0 flex flex-col items-center justify-center text-center p-6 space-y-4">
+                    <div className="p-5 rounded-full bg-white text-black shadow-[0_0_40px_rgba(255,255,255,0.6)] animate-pulse">
+                      <Play className="w-8 h-8 fill-black" />
+                    </div>
+                    <div className="space-y-1">
+                      <h4 className="text-xl sm:text-2xl font-sans font-light text-white">
+                        Atmósfera, Luz & Movimiento
+                      </h4>
+                      <p className="text-xs text-white/60 max-w-md font-light">
+                        El espacio diáfano donde los alumnos encuentran su ritmo y perfeccionan su técnica cada semana.
+                      </p>
+                    </div>
+                  </div>
+
+                  <div className="absolute bottom-4 right-4 flex items-center gap-2">
+                    <button
+                      onClick={() => setVideoMuted(!videoMuted)}
+                      className="p-2 rounded-full bg-black/60 backdrop-blur-md border border-white/20 text-white/70 hover:text-white cursor-pointer"
+                      aria-label="Silenciar sonido"
+                    >
+                      {videoMuted ? <VolumeX className="w-4 h-4" /> : <Volume2 className="w-4 h-4" />}
+                    </button>
+                  </div>
+                </div>
+
+                <div className="p-4 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-white/50">
+                  <span>📍 Carrer Oliver, 24 · Alcoy</span>
+                  <button
+                    onClick={() => {
+                      setVideoModalOpen(false);
+                      onOpenTrial();
+                    }}
+                    className="btn-pill-white py-2 px-5 text-xs uppercase cursor-pointer"
+                  >
+                    Reservar clase de prueba
+                  </button>
+                </div>
+              </motion.div>
             </motion.div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+          )}
+        </AnimatePresence>,
+        document.body
+      )}
 
     </div>
   );
