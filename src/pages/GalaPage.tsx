@@ -1,20 +1,33 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { 
   Download, 
   Calendar, 
   MapPin, 
   FileText,
-  ArrowUpRight
+  ArrowUpRight,
+  Sparkles
 } from 'lucide-react';
 import { GALA_INFO } from '../data/mockData';
+import { TheatricalCurtain } from '../components/common/TheatricalCurtain';
 
 export const GalaPage: React.FC = () => {
+  const [curtainKey, setCurtainKey] = useState(0);
+
   const handleDownloadProgram = () => {
     alert('Descargando el Programa Oficial de la Gala Danzas Al-Azraq en el Teatro Calderón (PDF).');
   };
 
   return (
     <div className="space-y-28 sm:space-y-40 pt-6 pb-24">
+      {/* Antique Theatrical Curtain Opening Effect */}
+      <TheatricalCurtain
+        key={curtainKey}
+        title="GALA DANZAS AL-AZRAQ"
+        subtitle="TEATRO CALDERÓN DE ALCOY"
+        mode="fullscreen"
+        autoStart={true}
+        delayMs={400}
+      />
       
       {/* 1. Header with Colossal Typography & Watermark */}
       <section className="relative min-h-[45vh] flex items-center justify-center overflow-hidden px-4 sm:px-6 lg:px-8 text-center">
@@ -87,7 +100,7 @@ export const GalaPage: React.FC = () => {
                 </div>
               </div>
 
-              <div className="flex flex-wrap items-center gap-4 pt-3">
+              <div className="flex flex-wrap items-center gap-3 sm:gap-4 pt-3">
                 <a
                   href="#entradas"
                   className="btn-pill-white text-xs uppercase tracking-wider py-3 px-6 flex items-center gap-1.5 font-medium"
@@ -101,6 +114,14 @@ export const GalaPage: React.FC = () => {
                 >
                   <Download className="w-3.5 h-3.5 text-white/60" />
                   <span>Descargar Programa (PDF)</span>
+                </button>
+                <button
+                  onClick={() => setCurtainKey((prev) => prev + 1)}
+                  className="btn-ghost-minimal text-xs uppercase tracking-wider py-3 px-4.5 flex items-center gap-2 font-medium border border-[#d4af37]/30 text-[#d4af37] hover:bg-[#d4af37]/10 transition-all cursor-pointer"
+                  title="Revivir la apertura del telón del Teatro Calderón"
+                >
+                  <Sparkles className="w-3.5 h-3.5 text-[#d4af37]" />
+                  <span>Abrir Telón</span>
                 </button>
               </div>
 

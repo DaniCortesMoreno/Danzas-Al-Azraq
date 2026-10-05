@@ -17,6 +17,7 @@ import { GALA_INFO, TESTIMONIALS, ACADEMY_INFO } from '../data/mockData';
 import { Card3DTilt } from '../components/common/Card3DTilt';
 import { DanceQuizBanner } from '../components/common/DanceQuizBanner';
 import { FAQSection } from '../components/common/FAQSection';
+import { TheatricalCurtain } from '../components/common/TheatricalCurtain';
 
 interface HomePageProps {
   onOpenTrial: (discipline?: string) => void;
@@ -468,6 +469,15 @@ export const HomePage: React.FC<HomePageProps> = ({ onOpenTrial, onOpenQuiz }) =
         className="relative w-screen h-screen -mx-[calc((100vw-100%)/2)] overflow-hidden flex flex-col justify-between select-none"
         style={{ perspective: '1400px' }}
       >
+        {/* Subtle Theatrical Curtain Opening Effect for Hero Stage */}
+        <TheatricalCurtain
+          mode="hero"
+          title="DANZAS AL-AZRAQ"
+          subtitle="TEMPORADA ACADÉMICA"
+          autoStart={true}
+          delayMs={300}
+        />
+
         {/* Dynamic Background Image */}
         <div
           className="absolute inset-0 bg-cover bg-center transition-transform duration-700 ease-out will-change-transform"
