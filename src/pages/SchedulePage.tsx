@@ -10,10 +10,13 @@ import {
   LayoutGrid,
   Filter,
   CheckCircle2,
-  Info
+  Info,
+  MessageCircle
 } from 'lucide-react';
 import { SCHEDULE_ITEMS } from '../data/mockData';
 import type { DisciplineCategory } from '../types';
+import { AddToCalendarModal } from '../components/common/AddToCalendarModal';
+import { shareClassViaWhatsApp, type ClassActionPayload } from '../utils/scheduleActions';
 
 interface SchedulePageProps {
   onOpenTrial: (discipline?: string) => void;
@@ -48,6 +51,7 @@ export const SchedulePage: React.FC<SchedulePageProps> = ({ onOpenTrial }) => {
   const [selectedDay, setSelectedDay] = useState<string>('Todos');
   const [selectedShift, setSelectedShift] = useState<'todos' | 'manana' | 'tarde'>('todos');
   const [onlyChildren, setOnlyChildren] = useState<boolean>(false);
+  const [calendarModalClass, setCalendarModalClass] = useState<ClassActionPayload | null>(null);
 
   const days = ['Todos', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'];
   const weekDays = ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'] as const;
@@ -664,26 +668,68 @@ export const SchedulePage: React.FC<SchedulePageProps> = ({ onOpenTrial }) => {
                             className="p-1 align-middle transition-opacity duration-300"
                             style={{ opacity: isDimmed ? 0.25 : 1 }}
                           >
-                            <button
-                              onClick={() => onOpenTrial(`${cell.name} · ${day} (${row.time})`)}
-                              className={`w-full group relative p-3 rounded-xl border transition-all duration-300 text-center flex flex-col items-center justify-center min-h-[68px] ${cell.borderClass} ${cell.bgClass} ${cell.glowClass} hover:scale-[1.02] active:scale-[0.98] cursor-pointer`}
-                              title={`Reservar clase de prueba de ${cell.name} (${day} ${row.time})`}
-                            >
-                              <span className={`text-[12px] font-bold tracking-wide uppercase leading-tight ${cell.textClass}`}>
-                                {cell.name}
-                              </span>
-
-                              {cell.instructor && (
-                                <span className="text-[10px] text-white/50 font-light mt-1 opacity-80 group-hover:opacity-100 group-hover:text-white transition-opacity">
-                                  {cell.instructor}
+                            <div className="relative group">
+                              <button
+                                onClick={() => onOpenTrial(`${cell.name} · ${day} (${row.time})`)}
+                                className={`w-full relative p-3 rounded-xl border transition-all duration-300 text-center flex flex-col items-center justify-center min-h-[68px] ${cell.borderClass} ${cell.bgClass} ${cell.glowClass} hover:scale-[1.02] active:scale-[0.98] cursor-pointer`}
+                                title={`Reservar clase de prueba de ${cell.name} (${day} ${row.time})`}
+                              >
+                                <span className={`text-[12px] font-bold tracking-wide uppercase leading-tight ${cell.textClass}`}>
+                                  {cell.name}
                                 </span>
-                              )}
 
-                              {/* Hover Indicator */}
-                              <span className="absolute bottom-1 right-1.5 opacity-0 group-hover:opacity-100 transition-opacity text-[9px] text-white/70 font-mono flex items-center gap-0.5">
-                                Probar <ArrowUpRight className="w-2.5 h-2.5" />
-                              </span>
-                            </button>
+                                {cell.instructor && (
+                                  <span className="text-[10px] text-white/50 font-light mt-1 opacity-80 group-hover:opacity-100 group-hover:text-white transition-opacity">
+                                    {cell.instructor}
+                                  </span>
+                                )}
+
+                                {/* Hover Indicator */}
+                                <span className="absolute bottom-1 right-1.5 opacity-0 group-hover:opacity-100 transition-opacity text-[9px] text-white/70 font-mono flex items-center gap-0.5">
+                                  Probar <ArrowUpRight className="w-2.5 h-2.5" />
+                                </span>
+                              </button>
+
+                              {/* Discrete 1-Click Action Buttons */}
+                              <div className="absolute top-1 right-1 flex items-center gap-1 z-10 opacity-70 group-hover:opacity-100 transition-opacity">
+                                <button
+                                  type="button"
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    setCalendarModalClass({
+                                      name: cell.name,
+                                      day,
+                                      time: row.time,
+                                      instructor: cell.instructor,
+                                      room: 'Sala Danzas Al-Azraq'
+                                    });
+                                  }}
+                                  className="p-1 rounded-md bg-black/75 hover:bg-black text-white/70 hover:text-white border border-white/15 hover:border-white/40 transition-all cursor-pointer shadow-sm"
+                                  title="Añadir a mi calendario (Google / Apple)"
+                                  aria-label="Añadir a mi calendario"
+                                >
+                                  <Calendar className="w-2.5 h-2.5" />
+                                </button>
+                                <button
+                                  type="button"
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    shareClassViaWhatsApp({
+                                      name: cell.name,
+                                      day,
+                                      time: row.time,
+                                      instructor: cell.instructor,
+                                      room: 'Sala Danzas Al-Azraq'
+                                    });
+                                  }}
+                                  className="p-1 rounded-md bg-black/75 hover:bg-[#25D366]/20 text-[#25D366]/90 hover:text-[#25D366] border border-white/15 hover:border-[#25D366]/50 transition-all cursor-pointer shadow-sm"
+                                  title="Invitar a un amigo por WhatsApp"
+                                  aria-label="Invitar a un amigo por WhatsApp"
+                                >
+                                  <MessageCircle className="w-2.5 h-2.5" />
+                                </button>
+                              </div>
+                            </div>
                           </td>
                         );
                       })}
@@ -881,8 +927,47 @@ export const SchedulePage: React.FC<SchedulePageProps> = ({ onOpenTrial }) => {
 
                     </div>
 
+                    {/* Utility Actions: Calendar Sync & WhatsApp Sharing */}
+                    <div className="pt-4 border-t border-white/[0.06] flex flex-wrap items-center gap-2">
+                      <button
+                        type="button"
+                        onClick={() =>
+                          setCalendarModalClass({
+                            name: item.name,
+                            day: item.day,
+                            time: item.time,
+                            instructor: item.instructor,
+                            room: item.room
+                          })
+                        }
+                        className="flex-1 min-w-[130px] inline-flex items-center justify-center gap-1.5 px-3 py-1.5 rounded-full bg-white/[0.03] hover:bg-white/[0.08] border border-white/10 text-[11px] text-white/70 hover:text-white transition-all cursor-pointer"
+                        title="Añadir clase a Google Calendar o Apple iCal"
+                      >
+                        <Calendar className="w-3.5 h-3.5 text-white/50" />
+                        <span>Añadir a mi calendario</span>
+                      </button>
+
+                      <button
+                        type="button"
+                        onClick={() =>
+                          shareClassViaWhatsApp({
+                            name: item.name,
+                            day: item.day,
+                            time: item.time,
+                            instructor: item.instructor,
+                            room: item.room
+                          })
+                        }
+                        className="flex-1 min-w-[130px] inline-flex items-center justify-center gap-1.5 px-3 py-1.5 rounded-full bg-[#25D366]/10 hover:bg-[#25D366]/20 border border-[#25D366]/25 text-[11px] text-[#25D366] transition-all cursor-pointer font-medium"
+                        title="Invitar a un amigo por WhatsApp con mensaje ya preparado"
+                      >
+                        <MessageCircle className="w-3.5 h-3.5" />
+                        <span>Invitar a un amigo</span>
+                      </button>
+                    </div>
+
                     {/* Spots left & Action */}
-                    <div className="pt-5 mt-5 border-t border-white/[0.06] flex items-center justify-between">
+                    <div className="pt-3 flex items-center justify-between">
                       <span className="text-[11px] font-mono px-2.5 py-1 rounded-full bg-white/[0.04] text-white/70 border border-white/10">
                         {item.spotsLeft <= 2 ? `¡Quedan ${item.spotsLeft} plazas!` : `${item.spotsLeft} disponibles`}
                       </span>
@@ -930,6 +1015,13 @@ export const SchedulePage: React.FC<SchedulePageProps> = ({ onOpenTrial }) => {
           </div>
         </div>
       </section>
+
+      {/* 5. Add To Calendar Modal */}
+      <AddToCalendarModal
+        isOpen={Boolean(calendarModalClass)}
+        onClose={() => setCalendarModalClass(null)}
+        classData={calendarModalClass}
+      />
 
     </div>
   );
