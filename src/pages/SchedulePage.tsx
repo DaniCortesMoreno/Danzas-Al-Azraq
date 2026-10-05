@@ -665,7 +665,7 @@ export const SchedulePage: React.FC<SchedulePageProps> = ({ onOpenTrial }) => {
                             style={{ opacity: isDimmed ? 0.25 : 1 }}
                           >
                             <button
-                              onClick={() => onOpenTrial(cell.name)}
+                              onClick={() => onOpenTrial(`${cell.name} · ${day} (${row.time})`)}
                               className={`w-full group relative p-3 rounded-xl border transition-all duration-300 text-center flex flex-col items-center justify-center min-h-[68px] ${cell.borderClass} ${cell.bgClass} ${cell.glowClass} hover:scale-[1.02] active:scale-[0.98] cursor-pointer`}
                               title={`Reservar clase de prueba de ${cell.name} (${day} ${row.time})`}
                             >
@@ -888,8 +888,8 @@ export const SchedulePage: React.FC<SchedulePageProps> = ({ onOpenTrial }) => {
                       </span>
 
                       <button
-                        onClick={() => onOpenTrial(item.name)}
-                        className="btn-pill-white py-2 px-4 text-xs uppercase font-medium flex items-center gap-1"
+                        onClick={() => onOpenTrial(`${item.name} · ${item.day} (${item.time})`)}
+                        className="btn-pill-white py-2 px-4 text-xs uppercase font-medium flex items-center gap-1 cursor-pointer"
                       >
                         <span>Reservar</span>
                         <ArrowUpRight className="w-3 h-3" />
