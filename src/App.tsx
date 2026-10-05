@@ -10,6 +10,7 @@ import { SmoothScroll } from './components/common/SmoothScroll';
 import { ScrollProgressBar } from './components/common/ScrollProgressBar';
 import { AmbientGlow } from './components/common/AmbientGlow';
 import { BackToTop } from './components/common/BackToTop';
+import { DanceQuizModal } from './components/common/DanceQuizModal';
 
 import { HomePage } from './pages/HomePage';
 import { DisciplinesPage } from './pages/DisciplinesPage';
@@ -24,6 +25,7 @@ import { CookiePolicyPage } from './pages/CookiePolicyPage';
 
 function AppContent() {
   const [trialModalOpen, setTrialModalOpen] = useState(false);
+  const [danceQuizOpen, setDanceQuizOpen] = useState(false);
   const [preselectedDiscipline, setPreselectedDiscipline] = useState<string | undefined>(undefined);
   const location = useLocation();
 
@@ -37,8 +39,16 @@ function AppContent() {
     setPreselectedDiscipline(undefined);
   };
 
+  const handleOpenQuiz = () => {
+    setDanceQuizOpen(true);
+  };
+
+  const handleCloseQuiz = () => {
+    setDanceQuizOpen(false);
+  };
+
   return (
-    <SmoothScroll isModalOpen={trialModalOpen}>
+    <SmoothScroll isModalOpen={trialModalOpen || danceQuizOpen}>
       {/* Dynamic 2px Glowing Scroll Progress Bar at the top */}
       <ScrollProgressBar />
 
@@ -61,10 +71,40 @@ function AppContent() {
               className="w-full"
             >
               <Routes location={location}>
-                <Route path="/" element={<HomePage onOpenTrial={handleOpenTrial} />} />
-                <Route path="/disciplinas" element={<DisciplinesPage onOpenTrial={handleOpenTrial} />} />
-                <Route path="/escuela" element={<SchoolPage onOpenTrial={handleOpenTrial} />} />
-                <Route path="/horarios" element={<SchedulePage onOpenTrial={handleOpenTrial} />} />
+                <Route 
+                  path="/" 
+                  element={
+                    <HomePage 
+                      onOpenTrial={handleOpenTrial} 
+                      onOpenQuiz={handleOpenQuiz} 
+                    />
+                  } 
+                />
+                <Route 
+                  path="/disciplinas" 
+                  element={
+                    <DisciplinesPage 
+                      onOpenTrial={handleOpenTrial} 
+                      onOpenQuiz={handleOpenQuiz} 
+                    />
+                  } 
+                />
+                <Route 
+                  path="/escuela" 
+                  element={
+                    <SchoolPage 
+                      onOpenTrial={handleOpenTrial} 
+                    />
+                  } 
+                />
+                <Route 
+                  path="/horarios" 
+                  element={
+                    <SchedulePage 
+                      onOpenTrial={handleOpenTrial} 
+                    />
+                  } 
+                />
                 <Route path="/gala" element={<GalaPage />} />
                 <Route path="/galeria" element={<GalleryPage />} />
                 <Route path="/contacto" element={<ContactPage />} />
@@ -95,6 +135,13 @@ function AppContent() {
           isOpen={trialModalOpen}
           onClose={handleCloseTrial}
           preselectedDiscipline={preselectedDiscipline}
+        />
+
+        {/* Global Dance Quiz Recommender Modal */}
+        <DanceQuizModal
+          isOpen={danceQuizOpen}
+          onClose={handleCloseQuiz}
+          onOpenTrial={handleOpenTrial}
         />
       </div>
     </SmoothScroll>

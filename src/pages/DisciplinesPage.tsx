@@ -5,7 +5,6 @@ import {
   Clock, 
   User, 
   Check, 
-  ChevronDown, 
   ArrowUpRight,
   Award, 
   HeartHandshake,
@@ -13,16 +12,18 @@ import {
   LayoutGrid,
   List
 } from 'lucide-react';
-import { DISCIPLINES, FAQS } from '../data/mockData';
+import { DISCIPLINES } from '../data/mockData';
 import type { DisciplineCategory } from '../types';
+import { DanceQuizBanner } from '../components/common/DanceQuizBanner';
+import { FAQSection } from '../components/common/FAQSection';
 
 interface DisciplinesPageProps {
   onOpenTrial: (discipline?: string) => void;
+  onOpenQuiz?: () => void;
 }
 
-export const DisciplinesPage: React.FC<DisciplinesPageProps> = ({ onOpenTrial }) => {
+export const DisciplinesPage: React.FC<DisciplinesPageProps> = ({ onOpenTrial, onOpenQuiz }) => {
   const [selectedCategory, setSelectedCategory] = useState<DisciplineCategory>('todas');
-  const [expandedFaq, setExpandedFaq] = useState<number | null>(0);
   const [viewLayout, setViewLayout] = useState<'bento' | 'list'>('bento');
   const [activeListId, setActiveListId] = useState<string>(DISCIPLINES[0].id);
 
@@ -345,6 +346,11 @@ export const DisciplinesPage: React.FC<DisciplinesPageProps> = ({ onOpenTrial })
         )}
       </section>
 
+      {/* Interactive Dance Quiz Recommendation Banner */}
+      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <DanceQuizBanner onOpenQuiz={onOpenQuiz || (() => {})} />
+      </section>
+
       {/* 4. Special Section: Clases Particulares y Proyectos Escénicos (Open Magazine Spread) */}
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="relative rounded-3xl hairline-border p-8 sm:p-14 lg:p-16 overflow-hidden bg-white/[0.015] backdrop-blur-2xl">
@@ -428,45 +434,9 @@ export const DisciplinesPage: React.FC<DisciplinesPageProps> = ({ onOpenTrial })
         </div>
       </section>
 
-      {/* 5. Preguntas Frecuentes FAQ (Clean Hairline Accordion) */}
-      <section className="max-w-4xl mx-auto px-4 sm:px-6">
-        <div className="text-center space-y-2 mb-10">
-          <span className="text-[11px] font-mono uppercase tracking-[0.25em] text-white/40 block">
-            DUDAS HABITUALES
-          </span>
-          <h2 className="text-3xl sm:text-4xl font-sans font-light text-white">
-            Preguntas Frecuentes
-          </h2>
-        </div>
-
-        <div className="divide-y divide-white/[0.08] hairline-top hairline-bottom">
-          {FAQS.map((faq, index) => {
-            const isOpen = expandedFaq === index;
-            return (
-              <div 
-                key={index} 
-                className="transition-all duration-300"
-              >
-                <button
-                  onClick={() => setExpandedFaq(isOpen ? null : index)}
-                  className="w-full py-6 text-left flex items-center justify-between gap-6 hover:text-white transition-colors"
-                >
-                  <span className={`font-light text-sm sm:text-base ${isOpen ? 'text-white' : 'text-white/80'}`}>
-                    {faq.question}
-                  </span>
-                  <div className={`p-1.5 rounded-full hairline-border transition-transform duration-300 ${isOpen ? 'rotate-180 bg-white text-black' : 'text-white/40'}`}>
-                    <ChevronDown className="w-4 h-4" />
-                  </div>
-                </button>
-                {isOpen && (
-                  <div className="pb-6 text-xs sm:text-sm text-white/50 leading-relaxed font-light">
-                    {faq.answer}
-                  </div>
-                )}
-              </div>
-            );
-          })}
-        </div>
+      {/* 5. Preguntas Frecuentes FAQ con Buscador Instantáneo */}
+      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <FAQSection onOpenTrial={onOpenTrial} />
       </section>
 
     </div>

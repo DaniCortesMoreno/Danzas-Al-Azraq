@@ -15,12 +15,15 @@ import {
 } from 'lucide-react';
 import { GALA_INFO, TESTIMONIALS, ACADEMY_INFO } from '../data/mockData';
 import { Card3DTilt } from '../components/common/Card3DTilt';
+import { DanceQuizBanner } from '../components/common/DanceQuizBanner';
+import { FAQSection } from '../components/common/FAQSection';
 
 interface HomePageProps {
   onOpenTrial: (discipline?: string) => void;
+  onOpenQuiz?: () => void;
 }
 
-export const HomePage: React.FC<HomePageProps> = ({ onOpenTrial }) => {
+export const HomePage: React.FC<HomePageProps> = ({ onOpenTrial, onOpenQuiz }) => {
   // Hero Interactive Carousel Widget State
   const [currentSlideIndex, setCurrentSlideIndex] = useState(0);
   const [progress, setProgress] = useState(0);
@@ -892,6 +895,10 @@ export const HomePage: React.FC<HomePageProps> = ({ onOpenTrial }) => {
 
       </section>
 
+      {/* Interactive Dance Quiz Recommendation Banner */}
+      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <DanceQuizBanner onOpenQuiz={onOpenQuiz || (() => {})} />
+      </section>
 
       {/* ==============================================================
           4. THE SPATIAL SANCTUARY (OPEN EDITORIAL ARCHITECTURE & BIOMECHANICS)
@@ -1242,6 +1249,10 @@ export const HomePage: React.FC<HomePageProps> = ({ onOpenTrial }) => {
 
       </section>
 
+      {/* Interactive FAQ Section with Instant Search */}
+      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <FAQSection onOpenTrial={onOpenTrial} />
+      </section>
 
       {/* ==============================================================
           7. THE PORTAL OF MOVEMENT (OPEN MONUMENTAL FINALE)
