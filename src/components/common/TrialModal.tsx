@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { X, CheckCircle, Sparkles, ArrowUpRight } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
 import confetti from 'canvas-confetti';
 import { DISCIPLINES } from '../../data/mockData';
 
@@ -23,8 +24,6 @@ export const TrialModal: React.FC<TrialModalProps> = ({
   const [notes, setNotes] = useState('');
   const [submitted, setSubmitted] = useState(false);
 
-  if (!isOpen) return null;
-
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     setSubmitted(true);
@@ -46,11 +45,25 @@ export const TrialModal: React.FC<TrialModalProps> = ({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/85 backdrop-blur-2xl transition-opacity animate-in fade-in duration-300">
-      <div 
-        className="relative w-full max-w-lg rounded-3xl bg-[#000000] border border-white/15 p-6 sm:p-8 max-h-[92vh] overflow-y-auto shadow-[0_30px_90px_rgba(0,0,0,0.9)] text-white"
-        onClick={(e) => e.stopPropagation()}
-      >
+    <AnimatePresence>
+      {isOpen && (
+        <motion.div 
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          transition={{ duration: 0.25 }}
+          onClick={onClose}
+          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/85 backdrop-blur-2xl"
+        >
+          <motion.div 
+            initial={{ opacity: 0, scale: 0.94, y: 15 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            exit={{ opacity: 0, scale: 0.94, y: 10 }}
+            transition={{ type: 'spring', damping: 28, stiffness: 320 }}
+            data-lenis-prevent
+            className="relative w-full max-w-lg rounded-3xl bg-[#0a0a0c] border border-white/15 p-6 sm:p-8 max-h-[92vh] overflow-y-auto shadow-[0_35px_100px_rgba(0,0,0,0.95)] text-white"
+            onClick={(e) => e.stopPropagation()}
+          >
         {/* Subtle Ethereal Ambient Glow */}
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-48 h-24 bg-white/[0.04] blur-3xl pointer-events-none rounded-full" />
 
@@ -244,7 +257,9 @@ export const TrialModal: React.FC<TrialModalProps> = ({
             </form>
           </div>
         )}
-      </div>
-    </div>
+          </motion.div>
+        </motion.div>
+      )}
+    </AnimatePresence>
   );
 };

@@ -27,6 +27,27 @@ html, body {
   -moz-osx-font-smoothing: grayscale;
 }
 
+/* Lenis Smooth Scroll Engine */
+html.lenis, html.lenis body {
+  height: auto;
+}
+
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+
+.lenis.lenis-smooth [data-lenis-prevent] {
+  overscroll-behavior: contain;
+}
+
+.lenis.lenis-stopped {
+  overflow: hidden;
+}
+
+.lenis.lenis-scrolling iframe {
+  pointer-events: none;
+}
+
 /* 3D Perspective & Physics Space */
 .antigravity-space {
   perspective: 1400px;
@@ -90,7 +111,7 @@ html, body {
               0 0 50px -15px rgba(255, 255, 255, 0.06);
 }
 
-/* Extreme Minimalist Primary Button */
+/* Extreme Minimalist Primary Button with Micro-Sheen */
 .btn-pill-white {
   display: inline-flex;
   align-items: center;
@@ -107,16 +128,51 @@ html, body {
   cursor: pointer;
   user-select: none;
   border: 1px solid rgba(255, 255, 255, 0.2);
+  position: relative;
+  overflow: hidden;
+}
+
+.btn-pill-white::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -120%;
+  width: 80%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.8),
+    transparent
+  );
+  transform: skewX(-20deg);
+  transition: 0.65s cubic-bezier(0.16, 1, 0.3, 1);
+  pointer-events: none;
+}
+
+.btn-pill-white:hover::after {
+  left: 140%;
 }
 
 .btn-pill-white:hover {
-  transform: translateY(-3px) scale(1.01);
-  background-color: #F4F4F6;
-  box-shadow: 0 20px 50px -10px rgba(255, 255, 255, 0.35), 0 30px 60px rgba(0, 0, 0, 0.6);
+  transform: translateY(-3px) scale(1.02);
+  background-color: #F8F8FA;
+  box-shadow: 0 20px 50px -10px rgba(255, 255, 255, 0.38), 0 30px 60px rgba(0, 0, 0, 0.6);
 }
 
 .btn-pill-white:active {
-  transform: translateY(0px) scale(0.99);
+  transform: translateY(0px) scale(0.97);
+}
+
+/* Fluid image zoom on container hover */
+.img-zoom-hover {
+  overflow: hidden;
+}
+.img-zoom-hover img {
+  transition: transform 0.8s cubic-bezier(0.16, 1, 0.3, 1), filter 0.8s ease;
+}
+.img-zoom-hover:hover img {
+  transform: scale(1.06);
 }
 
 /* Ethereal Ghost Minimal Button */

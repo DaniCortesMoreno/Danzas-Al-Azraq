@@ -30,6 +30,7 @@ export const Card3DTilt: React.FC<Card3DTiltProps> = ({
 
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
     if (!cardRef.current) return;
+    if (window.matchMedia && !window.matchMedia('(hover: hover)').matches) return;
     const rect = cardRef.current.getBoundingClientRect();
     const x = e.clientX - rect.left;
     const y = e.clientY - rect.top;
@@ -39,8 +40,8 @@ export const Card3DTilt: React.FC<Card3DTiltProps> = ({
 
     const rotateX = ((y - centerY) / centerY) * -actualTilt;
     const rotateY = ((x - centerX) / centerX) * actualTilt;
-    const levitateX = levitation ? ((x - centerX) / centerX) * 8 : 0;
-    const levitateY = levitation ? ((y - centerY) / centerY) * 8 : 0;
+    const levitateX = levitation ? ((x - centerX) / centerX) * 6 : 0;
+    const levitateY = levitation ? ((y - centerY) / centerY) * 6 : 0;
 
     setTransformStyle(
       `perspective(${perspective}px) rotateX(${rotateX.toFixed(2)}deg) rotateY(${rotateY.toFixed(2)}deg) translate3d(${levitateX.toFixed(1)}px, ${levitateY.toFixed(1)}px, 12px) scale3d(${scale}, ${scale}, ${scale})`
@@ -49,11 +50,12 @@ export const Card3DTilt: React.FC<Card3DTiltProps> = ({
     setGlarePosition({
       x: (x / rect.width) * 100,
       y: (y / rect.height) * 100,
-      opacity: 0.12
+      opacity: 0.15
     });
   };
 
   const handleMouseEnter = () => {
+    if (window.matchMedia && !window.matchMedia('(hover: hover)').matches) return;
     setIsHovered(true);
   };
 

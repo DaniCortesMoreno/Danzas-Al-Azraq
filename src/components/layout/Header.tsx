@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { NavLink, Link, useLocation } from 'react-router-dom';
 import { Menu, X, ArrowUpRight } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
 
 interface HeaderProps {
   onOpenTrial: () => void;
@@ -9,15 +10,21 @@ interface HeaderProps {
 export const Header: React.FC<HeaderProps> = ({ onOpenTrial }) => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const [hoveredPath, setHoveredPath] = useState<string | null>(null);
   const location = useLocation();
 
   useEffect(() => {
     const handleScroll = () => {
-      setScrolled(window.scrollY > 25);
+      setScrolled(window.scrollY > 20);
     };
-    window.addEventListener('scroll', handleScroll);
+    window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
+
+  // Close mobile menu on route change
+  useEffect(() => {
+    setMobileMenuOpen(false);
+  }, [location.pathname]);
 
   const navLinks = [
     { name: 'Disciplinas', path: '/disciplinas' },
@@ -28,7 +35,11 @@ export const Header: React.FC<HeaderProps> = ({ onOpenTrial }) => {
   ];
 
   return (
-    <header className="fixed top-0 left-0 w-full z-50 transition-all duration-500 py-4 sm:py-6 px-4 sm:px-8">
+    <header
+      className={`fixed top-0 left-0 w-full z-50 transition-all duration-500 px-4 sm:px-8 ${
+        scrolled ? 'py-3 bg-black/60 backdrop-blur-2xl border-b border-white/[0.06] shadow-[0_15px_40px_rgba(0,0,0,0.85)]' : 'py-5 sm:py-6 bg-transparent'
+      }`}
+    >
       <div className="max-w-7xl mx-auto flex items-center justify-between">
         
         {/* Left: Official Authentic Calligraphy Logo */}
@@ -39,33 +50,55 @@ export const Header: React.FC<HeaderProps> = ({ onOpenTrial }) => {
           <img 
             src="/logo-white.png" 
             alt="Danzas Al-Azraq" 
-            className="h-9 sm:h-11 w-auto object-contain transition-transform duration-300 group-hover:scale-105" 
+            className="h-9 sm:h-11 w-auto object-contain transition-transform duration-300 group-hover:scale-105 group-hover:brightness-110" 
           />
         </Link>
 
-        {/* Center: Minimalist Floating Frosted Capsule */}
-        <nav className={`hidden lg:flex items-center gap-7 px-8 py-2.5 rounded-full glass-capsule transition-all duration-300 ${
-          scrolled ? 'bg-black/85 shadow-[0_20px_50px_rgba(0,0,0,0.8)] border-white/15' : ''
-        }`}>
+        {/* Center: Minimalist Floating Frosted Capsule with Animated Layout Indicator */}
+        <nav 
+          onMouseLeave={() => setHoveredPath(null)}
+          className={`hidden lg:flex items-center gap-1.5 px-3 py-1.5 rounded-full glass-capsule transition-all duration-300 ${
+            scrolled ? 'bg-black/80 shadow-[0_20px_50px_rgba(0,0,0,0.9)] border-white/15' : ''
+          }`}
+        >
           {navLinks.map((link) => {
             const isActive = location.pathname === link.path;
+            const isHovered = hoveredPath === link.path;
+
             return (
               <NavLink
                 key={link.path}
                 to={link.path}
-                className={`text-[11px] uppercase tracking-[0.16em] font-medium transition-all duration-200 ${
+                onMouseEnter={() => setHoveredPath(link.path)}
+                className={`relative px-4 py-2 rounded-full text-[11px] uppercase tracking-[0.16em] font-medium transition-colors duration-200 select-none ${
                   isActive
-                    ? 'text-white font-semibold drop-shadow-[0_0_12px_rgba(255,255,255,0.4)]'
+                    ? 'text-white font-semibold'
                     : 'text-white/60 hover:text-white'
                 }`}
               >
-                {link.name}
+                {/* Active or Hovered Sliding Capsule Background */}
+                {(isActive || isHovered) && (
+                  <motion.div
+                    layoutId="headerNavPill"
+                    className={`absolute inset-0 rounded-full -z-10 ${
+                      isActive 
+                        ? 'bg-white/15 border border-white/20 shadow-[0_0_20px_rgba(255,255,255,0.12)]' 
+                        : 'bg-white/[0.07] border border-white/10'
+                    }`}
+                    transition={{
+                      type: 'spring',
+                      stiffness: 380,
+                      damping: 32
+                    }}
+                  />
+                )}
+                <span>{link.name}</span>
               </NavLink>
             );
           })}
         </nav>
 
-        {/* Right: Contact link & stark white pill button */}
+        {/* Right: Contact link & stark white pill button with sheen */}
         <div className="hidden lg:flex items-center gap-6 z-20">
           <Link
             to="/contacto"
@@ -93,7 +126,7 @@ export const Header: React.FC<HeaderProps> = ({ onOpenTrial }) => {
           </button>
           <button
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            className="p-2.5 rounded-full bg-black/60 backdrop-blur-xl border border-white/15 text-white"
+            className="p-2.5 rounded-full bg-black/60 backdrop-blur-xl border border-white/15 text-white active:scale-95 transition-all"
             aria-label="Menú de navegación"
           >
             {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
@@ -102,49 +135,57 @@ export const Header: React.FC<HeaderProps> = ({ onOpenTrial }) => {
 
       </div>
 
-      {/* Mobile Drawer */}
-      {mobileMenuOpen && (
-        <div className="lg:hidden mt-3 p-6 rounded-3xl antigravity-card border border-white/15 animate-in fade-in slide-in-from-top-3 duration-300 space-y-4">
-          <div className="flex flex-col gap-2">
-            <NavLink
-              to="/"
-              onClick={() => setMobileMenuOpen(false)}
-              className="px-4 py-2.5 rounded-xl text-xs uppercase tracking-wider font-light text-white/70 hover:text-white hover:bg-white/[0.04]"
-            >
-              Inicio
-            </NavLink>
-            {navLinks.map((link) => (
+      {/* Mobile Drawer with Silky Framer Motion Entrance */}
+      <AnimatePresence>
+        {mobileMenuOpen && (
+          <motion.div
+            initial={{ opacity: 0, y: -12, scale: 0.98 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: -10, scale: 0.98 }}
+            transition={{ duration: 0.28, ease: [0.16, 1, 0.3, 1] }}
+            className="lg:hidden mt-3 p-6 rounded-3xl antigravity-card border border-white/15 space-y-4 shadow-2xl"
+          >
+            <div className="flex flex-col gap-1.5">
               <NavLink
-                key={link.path}
-                to={link.path}
+                to="/"
                 onClick={() => setMobileMenuOpen(false)}
-                className="px-4 py-2.5 rounded-xl text-xs uppercase tracking-wider font-light text-white/70 hover:text-white hover:bg-white/[0.04]"
+                className="px-4 py-2.5 rounded-xl text-xs uppercase tracking-wider font-light text-white/70 hover:text-white hover:bg-white/[0.06] transition-all"
               >
-                {link.name}
+                Inicio
               </NavLink>
-            ))}
-            <NavLink
-              to="/contacto"
-              onClick={() => setMobileMenuOpen(false)}
-              className="px-4 py-2.5 rounded-xl text-xs uppercase tracking-wider font-light text-white/70 hover:text-white hover:bg-white/[0.04]"
-            >
-              Contacto
-            </NavLink>
-          </div>
+              {navLinks.map((link) => (
+                <NavLink
+                  key={link.path}
+                  to={link.path}
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="px-4 py-2.5 rounded-xl text-xs uppercase tracking-wider font-light text-white/70 hover:text-white hover:bg-white/[0.06] transition-all"
+                >
+                  {link.name}
+                </NavLink>
+              ))}
+              <NavLink
+                to="/contacto"
+                onClick={() => setMobileMenuOpen(false)}
+                className="px-4 py-2.5 rounded-xl text-xs uppercase tracking-wider font-light text-white/70 hover:text-white hover:bg-white/[0.06] transition-all"
+              >
+                Contacto
+              </NavLink>
+            </div>
 
-          <div className="pt-2 border-t border-white/[0.08]">
-            <button
-              onClick={() => {
-                setMobileMenuOpen(false);
-                onOpenTrial();
-              }}
-              className="btn-pill-white w-full py-3 text-xs uppercase tracking-wider"
-            >
-              Reservar clase gratuita
-            </button>
-          </div>
-        </div>
-      )}
+            <div className="pt-3 border-t border-white/[0.08]">
+              <button
+                onClick={() => {
+                  setMobileMenuOpen(false);
+                  onOpenTrial();
+                }}
+                className="btn-pill-white w-full py-3 text-xs uppercase tracking-wider"
+              >
+                Reservar clase gratuita
+              </button>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </header>
   );
 };
