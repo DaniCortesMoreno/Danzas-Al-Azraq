@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import { Send, MapPin, Phone, Mail, Clock, ArrowUpRight } from 'lucide-react';
 import { ACADEMY_INFO } from '../../data/mockData';
 
 export const Footer: React.FC = () => {
+  const location = useLocation();
   const [newsletterEmail, setNewsletterEmail] = useState('');
   const [newsletterSubscribed, setNewsletterSubscribed] = useState(false);
 
@@ -27,25 +28,20 @@ export const Footer: React.FC = () => {
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 lg:py-24">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-14 lg:gap-16">
-          
+
           {/* Column 1: Manifesto & Brand */}
           <div className="space-y-6">
             <Link to="/" className="inline-block group">
-              <img 
-                src="/logo-white.png" 
-                alt="Danzas Al-Azraq" 
-                className="h-10 sm:h-12 w-auto object-contain transition-transform duration-300 group-hover:scale-105" 
+              <img
+                src="/logo-white.png"
+                alt="Danzas Al-Azraq"
+                className="h-10 sm:h-12 w-auto object-contain transition-transform duration-300 group-hover:scale-105"
               />
             </Link>
-            
+
             <p className="text-xs sm:text-sm text-white/50 font-light leading-relaxed">
               Más de 15 años inspirando el arte del movimiento, la salud integral y la disciplina artística en el corazón de Alcoy. Formación desde los 3 años hasta adultos.
             </p>
-
-            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/[0.03] border border-white/[0.08] text-[11px] font-light text-white/70">
-              <span className="w-1.5 h-1.5 rounded-full bg-white animate-pulse" />
-              <span>Sede oficial en Alcoy (Alicante)</span>
-            </div>
           </div>
 
           {/* Column 2: Navigation Links */}
@@ -63,8 +59,8 @@ export const Footer: React.FC = () => {
                 { name: 'Contacto & Inscripción', path: '/contacto' },
               ].map((item) => (
                 <li key={item.path}>
-                  <Link 
-                    to={item.path} 
+                  <Link
+                    to={item.path}
                     className="text-white/60 hover:text-white flex items-center justify-between group transition-colors duration-200"
                   >
                     <span>{item.name}</span>
@@ -122,7 +118,15 @@ export const Footer: React.FC = () => {
 
             <div className="pt-2">
               <Link
-                to="/contacto"
+                to="/contacto#mapa"
+                onClick={() => {
+                  if (location.pathname === '/contacto') {
+                    const el = document.getElementById('mapa');
+                    if (el) {
+                      el.scrollIntoView({ behavior: 'smooth' });
+                    }
+                  }
+                }}
                 className="btn-ghost-minimal w-full py-2.5 px-4 text-xs uppercase tracking-wider justify-center border border-white/10"
               >
                 Ver plano de ubicación
@@ -178,9 +182,9 @@ export const Footer: React.FC = () => {
                   aria-label="Instagram"
                 >
                   <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-                    <rect width="20" height="20" x="2" y="2" rx="5" ry="5"/>
-                    <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/>
-                    <line x1="17.5" x2="17.51" y1="6.5" y2="6.5"/>
+                    <rect width="20" height="20" x="2" y="2" rx="5" ry="5" />
+                    <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z" />
+                    <line x1="17.5" x2="17.51" y1="6.5" y2="6.5" />
                   </svg>
                 </a>
                 <a
@@ -191,7 +195,7 @@ export const Footer: React.FC = () => {
                   aria-label="Facebook"
                 >
                   <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-                    <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/>
+                    <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z" />
                   </svg>
                 </a>
                 <div className="flex-1 flex items-center justify-center px-3 py-1.5 rounded-full bg-white/[0.03] border border-white/10 text-[11px] font-mono text-white/60">
@@ -204,12 +208,24 @@ export const Footer: React.FC = () => {
         </div>
 
         {/* Bottom Bar */}
-        <div className="mt-16 pt-8 border-t border-white/[0.06] flex flex-col sm:flex-row items-center justify-between gap-4 text-xs font-light text-white/40">
+        <div className="mt-16 pt-8 border-t border-white/[0.06] flex flex-col md:flex-row items-center justify-between gap-4 text-xs font-light text-white/40">
           <p>© {new Date().getFullYear()} Danzas Al-Azraq Alcoy. Todos los derechos reservados.</p>
-          <div className="flex items-center gap-2">
+          <div className="flex flex-wrap items-center justify-center gap-x-2.5 gap-y-1">
             <span>Danza & Consciencia Corporal</span>
             <span>•</span>
             <span>Alcoy (Alicante)</span>
+            <span className="hidden sm:inline">•</span>
+            <span>
+              Diseño web por{' '}
+              <a
+                href="https://danicortesm.com"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-white/60 hover:text-white transition-colors underline decoration-white/20 underline-offset-2 hover:decoration-white"
+              >
+                danicortesm.com
+              </a>
+            </span>
           </div>
         </div>
       </div>

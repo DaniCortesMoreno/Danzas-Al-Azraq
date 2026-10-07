@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useLocation } from 'react-router-dom';
 import { 
   MapPin, 
   Phone, 
@@ -7,12 +8,16 @@ import {
   MessageCircle, 
   CheckCircle, 
   ExternalLink,
-  ArrowUpRight
+  ArrowUpRight,
+  Navigation,
+  Copy,
+  Check
 } from 'lucide-react';
 import confetti from 'canvas-confetti';
 import { ACADEMY_INFO, DISCIPLINES } from '../data/mockData';
 
 export const ContactPage: React.FC = () => {
+  const location = useLocation();
   const [name, setName] = useState('');
   const [phone, setPhone] = useState('');
   const [email, setEmail] = useState('');
@@ -20,6 +25,27 @@ export const ContactPage: React.FC = () => {
   const [selectedDiscipline, setSelectedDiscipline] = useState(DISCIPLINES[0].title);
   const [message, setMessage] = useState('');
   const [submitted, setSubmitted] = useState(false);
+  const [copiedAddress, setCopiedAddress] = useState(false);
+
+  useEffect(() => {
+    if (location.hash === '#mapa') {
+      const scrollTimer = setTimeout(() => {
+        const el = document.getElementById('mapa');
+        if (el) {
+          el.scrollIntoView({ behavior: 'smooth' });
+        }
+      }, 150);
+      return () => clearTimeout(scrollTimer);
+    }
+  }, [location.hash]);
+
+  const handleCopyAddress = () => {
+    if (navigator?.clipboard?.writeText) {
+      navigator.clipboard.writeText('Carrer Perú, 82, 03803 Alcoi, Alicante');
+      setCopiedAddress(true);
+      setTimeout(() => setCopiedAddress(false), 2200);
+    }
+  };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -355,6 +381,123 @@ export const ContactPage: React.FC = () => {
 
             </div>
 
+          </div>
+
+        </div>
+      </section>
+
+      {/* 3. Colossal 100% Full-Width Responsive Black & White Map Section */}
+      <section id="mapa" className="w-full relative space-y-8 pt-4 scroll-mt-28">
+        
+        {/* Section Header with Minimalist Luxury Typography */}
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-6 pb-6 border-b border-white/[0.06]">
+            <div className="space-y-2">
+              <span className="text-[11px] font-mono uppercase tracking-[0.25em] text-white/40 block">
+                LOCALIZACIÓN & SEDE
+              </span>
+              <h2 className="text-2xl sm:text-4xl font-sans font-extralight tracking-tight text-white">
+                Dónde <span className="font-normal text-white">Encontrarnos</span>
+              </h2>
+            </div>
+            <p className="text-xs sm:text-sm text-white/50 max-w-md font-light leading-relaxed">
+              Instalaciones técnicas de danza en Alcoy. Situadas en Carrer Perú, 82 con fácil acceso y zona de aparcamiento libre en las inmediaciones.
+            </p>
+          </div>
+        </div>
+
+        {/* 100% Full-Width Screen Map Container */}
+        <div className="relative w-full h-[500px] sm:h-[580px] lg:h-[640px] bg-[#0a0a0a] border-y border-white/[0.08] overflow-hidden group">
+          
+          {/* Black & White Monochrome Google Maps Embed with precision coordinates & zoom */}
+          <iframe
+            title="Ubicación Danzas Al-Azraq - Carrer Perú 82, 03803 Alcoi"
+            src="https://maps.google.com/maps?q=Carrer+Per%C3%BA+82,+03803+Alcoi,+Alicante&t=&z=16&ie=UTF8&iwloc=&output=embed"
+            className="w-full h-full border-0 filter grayscale invert contrast-[88%] brightness-[92%] opacity-90 transition-opacity duration-500 group-hover:opacity-100"
+            loading="lazy"
+            allowFullScreen
+            referrerPolicy="no-referrer-when-downgrade"
+          />
+
+          {/* Vignette Gradients for Cinematic Seamless Blending into Pure Black Background */}
+          <div className="absolute inset-x-0 top-0 h-28 bg-gradient-to-b from-black via-black/40 to-transparent pointer-events-none" />
+          <div className="absolute inset-x-0 bottom-0 h-28 bg-gradient-to-t from-black via-black/40 to-transparent pointer-events-none" />
+
+          {/* Floating Luxury Glass Location HUD Card (Responsive) */}
+          <div className="absolute top-6 left-4 sm:top-10 sm:left-8 lg:left-12 max-w-[calc(100%-2rem)] sm:max-w-md w-full z-20 pointer-events-auto">
+            <div className="rounded-3xl hairline-border p-6 sm:p-7 bg-black/80 backdrop-blur-2xl shadow-[0_25px_60px_rgba(0,0,0,0.95)] space-y-5 border border-white/15">
+              
+              {/* Badge & Live Status */}
+              <div className="flex items-center justify-between gap-3">
+                <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/[0.06] border border-white/10 text-[10px] font-mono text-white/90 uppercase tracking-widest">
+                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+                  Sede Danzas Al-Azraq
+                </div>
+                <span className="text-[10px] font-mono text-white/40 tracking-wider">
+                  03803 ALCOI
+                </span>
+              </div>
+
+              {/* Location Title & Exact Address */}
+              <div className="space-y-1.5">
+                <h3 className="text-xl sm:text-2xl font-sans font-light text-white tracking-tight">
+                  Escuela & Estudio Central
+                </h3>
+                <p className="text-xs sm:text-sm text-white/90 font-medium flex items-start gap-2">
+                  <MapPin className="w-4 h-4 text-white shrink-0 mt-0.5" />
+                  <span>Carrer Perú, 82, 03803 Alcoi, Alicante</span>
+                </p>
+                <p className="text-[11px] text-white/50 font-light pl-6">
+                  Zona Santa Rosa · Amplias salas de danza climatizadas con suelo técnico
+                </p>
+              </div>
+
+              {/* Action Buttons */}
+              <div className="pt-2 flex flex-col sm:flex-row gap-2.5">
+                <a
+                  href="https://www.google.com/maps/dir/?api=1&destination=Carrer+Per%C3%BA,+82,+03803+Alcoi,+Alicante"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="btn-pill-white flex-1 py-3 px-4 text-xs uppercase tracking-wider font-medium flex items-center justify-center gap-2 cursor-pointer shadow-lg"
+                >
+                  <Navigation className="w-3.5 h-3.5" />
+                  <span>Cómo llegar</span>
+                </a>
+
+                <button
+                  type="button"
+                  onClick={handleCopyAddress}
+                  className="px-4 py-3 rounded-full bg-white/[0.05] hover:bg-white/[0.1] active:scale-95 border border-white/10 text-xs text-white uppercase tracking-wider transition-all flex items-center justify-center gap-1.5 cursor-pointer shrink-0"
+                  title="Copiar dirección al portapapeles"
+                >
+                  {copiedAddress ? (
+                    <>
+                      <Check className="w-3.5 h-3.5 text-emerald-400" />
+                      <span className="text-emerald-400 font-medium">¡Copiada!</span>
+                    </>
+                  ) : (
+                    <>
+                      <Copy className="w-3.5 h-3.5 text-white/70" />
+                      <span>Copiar</span>
+                    </>
+                  )}
+                </button>
+              </div>
+
+            </div>
+          </div>
+
+          {/* Quick Open Maps pill in bottom-right on desktop */}
+          <div className="hidden sm:block absolute bottom-6 right-8 z-20 pointer-events-auto">
+            <a
+              href="https://maps.google.com/?q=Carrer+Per%C3%BA,+82,+03803+Alcoi,+Alicante"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 px-4 py-2.5 rounded-full bg-black/75 backdrop-blur-xl border border-white/15 text-[11px] uppercase tracking-wider text-white/70 hover:text-white hover:bg-black/95 transition-all shadow-xl"
+            >
+              <span>Abrir en pantalla completa</span>
+              <ExternalLink className="w-3 h-3" />
+            </a>
           </div>
 
         </div>

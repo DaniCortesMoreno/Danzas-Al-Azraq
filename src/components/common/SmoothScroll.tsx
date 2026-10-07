@@ -29,15 +29,30 @@ export const SmoothScroll: React.FC<SmoothScrollProps> = ({ children, isModalOpe
   const location = useLocation();
   const lenis = useLenis();
 
-  // Scroll to top immediately on route change without jarring jump
+  // Scroll to top immediately on route change unless a hash anchor is provided
   useEffect(() => {
     const activeLenis = lenisRef.current?.lenis || lenis;
+
+    if (location.hash) {
+      const hashTimer = setTimeout(() => {
+        const el = document.querySelector(location.hash);
+        if (el) {
+          if (activeLenis) {
+            activeLenis.scrollTo(el as HTMLElement, { offset: -80, duration: 1.2 });
+          } else {
+            el.scrollIntoView({ behavior: 'smooth' });
+          }
+        }
+      }, 150);
+      return () => clearTimeout(hashTimer);
+    }
+
     if (activeLenis) {
       activeLenis.scrollTo(0, { immediate: true });
     } else {
       window.scrollTo(0, 0);
     }
-  }, [location.pathname, lenis]);
+  }, [location.pathname, location.hash, lenis]);
 
   // Pause scrolling while modal is open, resume when closed
   useEffect(() => {

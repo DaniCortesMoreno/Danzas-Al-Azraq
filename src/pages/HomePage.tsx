@@ -24,83 +24,9 @@ interface HomePageProps {
 }
 
 export const HomePage: React.FC<HomePageProps> = ({ onOpenTrial, onOpenQuiz }) => {
-  // Hero Interactive Carousel Widget State
-  const [currentSlideIndex, setCurrentSlideIndex] = useState(0);
-  const [progress, setProgress] = useState(0);
-
   // 3D Mouse Parallax State for Hero
   const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
   const heroRef = useRef<HTMLDivElement>(null);
-
-  const heroSlides = [
-    {
-      id: 's1',
-      title: 'Ballet & Creativa',
-      category: 'Infantil (desde 3 años)',
-      image: '/images/ballet-infantil.jpg',
-      discipline: 'Danza Infantil y Creativa'
-    },
-    {
-      id: 's2',
-      title: 'Fusión Flamenco Oriental',
-      category: 'Identidad Al-Azraq',
-      image: '/images/fusion-flamenco.jpg',
-      discipline: 'Danza Oriental y Fusión Flamenco'
-    },
-    {
-      id: 's3',
-      title: 'Pilates & Salud Postural',
-      category: 'Adultos & Bienestar',
-      image: '/images/pilates-wellness.jpg',
-      discipline: 'Pilates Suelo & Corrección Postural'
-    },
-    {
-      id: 's4',
-      title: 'Salsa & Son Mambo',
-      category: 'Ritmos Latinos',
-      image: '/images/latin-salsa.jpg',
-      discipline: 'Salsa, Bachata & Son Mambo'
-    },
-    {
-      id: 's5',
-      title: 'Contemporáneo & Expresión',
-      category: 'Técnica Conservatorio',
-      image: '/images/hero-dance.jpg',
-      discipline: 'Danza Clásica y Contemporáneo'
-    },
-    {
-      id: 's6',
-      title: 'Danza Urbana & Commercial',
-      category: 'Juventud & Ritmo',
-      image: '/images/danza-urbana.jpg',
-      discipline: 'Baile Moderno, Hip Hop & Commercial'
-    }
-  ];
-
-  // Auto-advance preview carousel widget in Hero
-  useEffect(() => {
-    const timer = setInterval(() => {
-      setProgress((prev) => {
-        if (prev >= 100) {
-          setCurrentSlideIndex((curr) => (curr + 1) % heroSlides.length);
-          return 0;
-        }
-        return prev + 2;
-      });
-    }, 100);
-
-    return () => clearInterval(timer);
-  }, [heroSlides.length]);
-
-  const handleNextSlide = () => {
-    setCurrentSlideIndex((curr) => (curr + 1) % heroSlides.length);
-    setProgress(0);
-  };
-
-  const handlePrevSlide = () => {
-    setCurrentSlideIndex((curr) => (curr - 1 + heroSlides.length) % heroSlides.length);
-    setProgress(0);
-  };
 
   const handleHeroMouseMove = (e: React.MouseEvent) => {
     if (!heroRef.current) return;
@@ -499,124 +425,43 @@ export const HomePage: React.FC<HomePageProps> = ({ onOpenTrial, onOpenQuiz }) =
         {/* Top Spacer for Floating Navbar */}
         <div className="pt-24" />
 
-        {/* Bottom Hero Dual Zone: Left Details + Right Floating 3D Widget */}
+        {/* Bottom Hero: Minimalist Headline & Direct Actions */}
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full pb-14 sm:pb-20 z-10">
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-end">
+          <div
+            className="max-w-3xl space-y-6 transition-transform duration-300 ease-out"
+            style={{
+              transform: `translate3d(${mousePos.x * 12}px, ${mousePos.y * 12}px, 0)`
+            }}
+          >
+            <div className="space-y-4">
+              <h1 className="text-4xl sm:text-6xl xl:text-7xl font-sans font-extralight text-white tracking-tight leading-[1.08]">
+                Explora la danza <br />
+                <span className="font-normal text-white">como nunca antes.</span>
+              </h1>
 
-            {/* Bottom-Left: Minimalist Headline & Direct Actions */}
-            <div
-              className="lg:col-span-7 space-y-6 transition-transform duration-300 ease-out"
-              style={{
-                transform: `translate3d(${mousePos.x * 12}px, ${mousePos.y * 12}px, 0)`
-              }}
-            >
-
-              <div className="space-y-4">
-                <h1 className="text-4xl sm:text-6xl xl:text-7xl font-sans font-extralight text-white tracking-tight leading-[1.08]">
-                  Explora la danza <br />
-                  <span className="font-normal text-white">como nunca antes.</span>
-                </h1>
-
-                <p className="text-xs sm:text-sm text-white/70 font-light leading-relaxed max-w-lg">
-                  Formación artística de conservatorio, bienestar corporal consciente y pasión escénica en el corazón de Alcoy. Desde los 3 años hasta adultos.
-                </p>
-              </div>
-
-              {/* Minimalist Dual CTAs */}
-              <div className="flex flex-wrap items-center gap-4 pt-2">
-                <button
-                  onClick={() => onOpenTrial()}
-                  className="btn-pill-white gap-2"
-                >
-                  <span>Reservar ahora</span>
-                  <ArrowUpRight className="w-4 h-4" />
-                </button>
-
-                <Link
-                  to="/disciplinas"
-                  className="btn-ghost-minimal"
-                >
-                  <span>Ver disciplinas</span>
-                  <ChevronRight className="w-4 h-4" />
-                </Link>
-              </div>
-
+              <p className="text-xs sm:text-sm text-white/70 font-light leading-relaxed max-w-xl">
+                Formación artística de conservatorio, bienestar corporal consciente y pasión escénica en el corazón de Alcoy. Desde los 3 años hasta adultos.
+              </p>
             </div>
 
-            {/* Bottom-Right: Floating 3D Carousel Preview Widget */}
-            <div
-              className="lg:col-span-5 flex justify-start lg:justify-end transition-transform duration-300 ease-out"
-              style={{
-                transform: `translate3d(${mousePos.x * 22}px, ${mousePos.y * 22}px, 0)`
-              }}
-            >
-              <Card3DTilt maxTilt={10} className="w-full max-w-[340px]">
-                <div className="antigravity-card rounded-3xl p-4.5 border border-white/20 overflow-hidden space-y-3.5">
+            {/* Minimalist Dual CTAs */}
+            <div className="flex flex-wrap items-center gap-4 pt-2">
+              <button
+                onClick={() => onOpenTrial()}
+                className="btn-pill-white gap-2"
+              >
+                <span>Reservar ahora</span>
+                <ArrowUpRight className="w-4 h-4" />
+              </button>
 
-                  {/* Thumbnail Card with interactive hover */}
-                  <div
-                    onClick={() => onOpenTrial(heroSlides[currentSlideIndex].discipline)}
-                    className="relative h-44 rounded-2xl overflow-hidden cursor-pointer group"
-                  >
-                    <img
-                      src={heroSlides[currentSlideIndex].image}
-                      alt={heroSlides[currentSlideIndex].title}
-                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/20 to-transparent" />
-
-                    {/* Floating pill inside thumbnail */}
-                    <div className="absolute top-3 left-3 px-3 py-1 rounded-full bg-black/60 backdrop-blur-md text-[10px] font-medium text-white/90 border border-white/10">
-                      {heroSlides[currentSlideIndex].category}
-                    </div>
-
-                    <div className="absolute bottom-3 left-3 right-3 flex items-center justify-between text-white">
-                      <span className="font-sans font-medium text-xs tracking-wide">
-                        {heroSlides[currentSlideIndex].title}
-                      </span>
-                      <span className="p-1 rounded-full bg-white/20 backdrop-blur-md">
-                        <ArrowUpRight className="w-3.5 h-3.5" />
-                      </span>
-                    </div>
-                  </div>
-
-                  {/* Carousel Progress Bar & Navigation Controls */}
-                  <div className="flex items-center justify-between text-xs text-white/80 pt-1">
-                    <span className="font-mono text-[11px] text-white/60 tracking-wider">
-                      {`0${currentSlideIndex + 1}`}/0{heroSlides.length}
-                    </span>
-
-                    {/* Progress Track */}
-                    <div className="flex-1 mx-4 h-1 bg-white/10 rounded-full overflow-hidden">
-                      <div
-                        className="h-full bg-white transition-all duration-100 ease-linear rounded-full"
-                        style={{ width: `${progress}%` }}
-                      />
-                    </div>
-
-                    {/* Controls */}
-                    <div className="flex items-center gap-1">
-                      <button
-                        onClick={handlePrevSlide}
-                        className="p-1.5 rounded-full hover:bg-white/10 text-white/60 hover:text-white transition-colors"
-                        aria-label="Anterior disciplina"
-                      >
-                        <ChevronLeft className="w-4 h-4" />
-                      </button>
-                      <button
-                        onClick={handleNextSlide}
-                        className="p-1.5 rounded-full hover:bg-white/10 text-white/60 hover:text-white transition-colors"
-                        aria-label="Siguiente disciplina"
-                      >
-                        <ChevronRight className="w-4 h-4" />
-                      </button>
-                    </div>
-                  </div>
-
-                </div>
-              </Card3DTilt>
+              <Link
+                to="/disciplinas"
+                className="btn-ghost-minimal"
+              >
+                <span>Ver disciplinas</span>
+                <ChevronRight className="w-4 h-4" />
+              </Link>
             </div>
-
           </div>
         </div>
 

@@ -61,48 +61,57 @@ export const Header: React.FC<HeaderProps> = ({ onOpenTrial }) => {
             scrolled ? 'bg-black/80 shadow-[0_20px_50px_rgba(0,0,0,0.9)] border-white/15' : ''
           }`}
         >
-          {navLinks.map((link) => {
-            const isActive = location.pathname === link.path;
-            const isHovered = hoveredPath === link.path;
+          {(() => {
+            const activePath = navLinks.some((l) => l.path === location.pathname) ? location.pathname : null;
+            const currentPillPath = hoveredPath !== null ? hoveredPath : activePath;
 
-            return (
-              <NavLink
-                key={link.path}
-                to={link.path}
-                onMouseEnter={() => setHoveredPath(link.path)}
-                className={`relative px-4 py-2 rounded-full text-[11px] uppercase tracking-[0.16em] font-medium transition-colors duration-200 select-none ${
-                  isActive
-                    ? 'text-white font-semibold'
-                    : 'text-white/60 hover:text-white'
-                }`}
-              >
-                {/* Active or Hovered Sliding Capsule Background */}
-                {(isActive || isHovered) && (
-                  <motion.div
-                    layoutId="headerNavPill"
-                    className={`absolute inset-0 rounded-full -z-10 ${
-                      isActive 
-                        ? 'bg-white/15 border border-white/20 shadow-[0_0_20px_rgba(255,255,255,0.12)]' 
-                        : 'bg-white/[0.07] border border-white/10'
-                    }`}
-                    transition={{
-                      type: 'spring',
-                      stiffness: 380,
-                      damping: 32
-                    }}
-                  />
-                )}
-                <span>{link.name}</span>
-              </NavLink>
-            );
-          })}
+            return navLinks.map((link) => {
+              const isActive = location.pathname === link.path;
+              const hasPill = currentPillPath === link.path;
+
+              return (
+                <NavLink
+                  key={link.path}
+                  to={link.path}
+                  onMouseEnter={() => setHoveredPath(link.path)}
+                  className={`relative px-4 py-2 rounded-full text-[11px] uppercase tracking-[0.16em] font-medium transition-colors duration-200 select-none ${
+                    isActive
+                      ? 'text-white font-semibold'
+                      : 'text-white/60 hover:text-white'
+                  }`}
+                >
+                  {/* Single Smooth Sliding Capsule Background */}
+                  {hasPill && (
+                    <motion.div
+                      layoutId="headerNavPill"
+                      className={`absolute inset-0 rounded-full -z-10 ${
+                        isActive
+                          ? 'bg-white/15 border border-white/20 shadow-[0_0_20px_rgba(255,255,255,0.12)]'
+                          : 'bg-white/[0.08] border border-white/10 shadow-[0_0_15px_rgba(255,255,255,0.06)]'
+                      }`}
+                      transition={{
+                        type: 'spring',
+                        stiffness: 380,
+                        damping: 32,
+                      }}
+                    />
+                  )}
+                  <span className="relative z-10">{link.name}</span>
+                </NavLink>
+              );
+            });
+          })()}
         </nav>
 
         {/* Right: Contact link & stark white pill button with sheen */}
         <div className="hidden lg:flex items-center gap-6 z-20">
           <Link
             to="/contacto"
-            className="text-[11px] uppercase tracking-[0.16em] font-medium text-white/70 hover:text-white transition-colors"
+            className={`text-[11px] uppercase tracking-[0.16em] font-medium transition-colors ${
+              location.pathname === '/contacto'
+                ? 'text-white font-semibold'
+                : 'text-white/70 hover:text-white'
+            }`}
           >
             Contacto
           </Link>

@@ -3,7 +3,7 @@ import type { Discipline, FacultyMember, ClassScheduleItem, Testimonial, Gallery
 export const ACADEMY_INFO = {
   name: 'Danzas Al-Azraq',
   slogan: 'Expresa, mueve y siente el arte de la danza en Alcoy',
-  address: 'Carrer Oliver, 24, 03802 Alcoy, Alicante',
+  address: 'Carrer Perú, 82, 03803 Alcoi, Alicante',
   phone: '+34 965 54 82 10',
   phoneDisplay: '965 54 82 10',
   whatsapp: '+34 644 88 92 15',
@@ -12,7 +12,7 @@ export const ACADEMY_INFO = {
   facebook: 'Danzas Al-Azraq Alcoy',
   hours: 'Lunes a Viernes: 08:00 - 13:30 / 16:00 - 21:30 | Sábados: 09:00 - 14:00',
   scheduleDesk: 'Lunes a Jueves de 16:30 a 20:30 h',
-  googleMapsUrl: 'https://maps.google.com/?q=Carrer+Oliver+24+Alcoy',
+  googleMapsUrl: 'https://maps.google.com/?q=Carrer+Per%C3%BA,+82,+03803+Alcoi,+Alicante',
   stats: {
     years: '+15',
     students: '+500',
